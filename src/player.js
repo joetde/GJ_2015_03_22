@@ -7,7 +7,7 @@ var Player = function(world) {
     
     //animations
     this.sprite.animations.add('walk-up', [0], 10, true);
-    this.sprite.animations.add('walk-down', [0], 10, true);
+    this.sprite.animations.add('walk-down', [0,1,2,3], 7, true);
     this.sprite.animations.add('walk-left', [0], 10, true);
     this.sprite.animations.add('walk-right', [0], 10, true);
     

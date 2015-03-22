@@ -46,7 +46,7 @@ var world = {
         game.load.image('zombie', 'res/img/zombie_simple.png');
         game.load.image('ball', 'res/img/brocoli.png');
 		game.load.image('human', 'res/img/human_simple.png');
-        game.load.spritesheet('medic_simple', 'res/img/medic_simple.png', 33, 58);
+        game.load.spritesheet('medic_simple', 'res/img/medic_sprite.png', 33, 61);
     },
 
     create: function () {
