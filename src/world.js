@@ -18,9 +18,9 @@ var Config = {
 var Globals = {
     backgroundImg : null,
     backgroundMusic : null,
-    player : null,
     target : null,
-    leftTop : null
+    leftTop : null,
+	zombieView : 200
 };
 
 // game variables
@@ -37,6 +37,7 @@ var world = {
 
         // images
         game.load.image('temp', 'res/img/temp.png');
+		game.load.image('medic_simple', 'res/img/medic_simple.png');
     },
 
     create: function () {
@@ -44,50 +45,51 @@ var world = {
 	
         //Entities
         this.zombies = game.add.group();
-		this.zombies.classType = Zombie;
-        this.zombies.enableBody = true;
+		this.zombies.enableBody = true;
         
         this.humans = game.add.group();
         this.humans.enableBody = true;
 
         this.player = new Player(world);
-        
-        // display
-        //Globals.backgroundImg = game.add.sprite(0, 0, 'background');
-        Globals.player = game.add.sprite(0, 0, 'temp');
+		Globals.target = this.player;
 
         // sound
         Globals.backgroundMusic = game.add.audio('background_music');
         Globals.backgroundMusic.play(null, 0, 1, true);
 
-        game.physics.enable(Globals.player, Phaser.Physics.ARCADE);
-		
-		
 		// Zombies
 		for (var i = 0; i < 50; i++)
 		{
-			var ball = zombies.create(game.world.randomX, game.world.randomY, 'temp');
+			var zombie = this.zombies.create(game.world.randomX, game.world.randomY, 'temp');
+			zombie.name = 'zombie' + i;
+			zombie.body.collideWorldBounds = true;
+			zombie.body.width = 30;
+			zombie.body.height = 30;
+			zombie.body.bounce.setTo(0.8, 0.8);
+			zombie.body.velocity.setTo(10 + Math.random() * 40, 10 + Math.random() * 40);
 		}
     },
 
     update: function () {
-        checkInput();
-        
-        this.player.update();
-        this.zombies.update();
+		game.physics.arcade.collide(this.player, this.zombies);
+		game.physics.arcade.collide(this.zombies, this.zombies);
+		
+		this.player.update();
+		this.zombies.forEach(this.gotToTarget, this, true);
         this.humans.update();
-    }
-}
-
-function checkInput() {
-    Globals.player.body.velocity.x = 0;
-    Globals.player.body.velocity.y = 0;
-    for (direction = 0; direction < 4; direction++) {
-        if (game.input.keyboard.isDown(Config.KEYS[direction])) {
-            Config.COORMAP[direction][0] ? Globals.player.body.velocity.x = Config.COORMAP[direction][0] * Config.SPEED : 0;
-            Config.COORMAP[direction][1] ? Globals.player.body.velocity.y = Config.COORMAP[direction][1] * Config.SPEED : 0;
-        }
-    }
+    },
+	
+	gotToTarget: function(zombie) {
+		if (this.targetInRange(zombie)) {
+			game.physics.arcade.moveToObject(zombie, Globals.target.sprite, 100);
+		}
+	},
+	
+	targetInRange: function(zombie) {
+		dx = zombie.x - Globals.target.sprite.x;
+		dy = zombie.y - Globals.target.sprite.y;
+		return Math.sqrt(dx*dx + dy*dy) < Globals.zombieView;
+	}
 }
 
 game.state.add('world', world);
