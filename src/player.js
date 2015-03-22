@@ -6,11 +6,11 @@ var Player = function(world) {
     game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	this.sprite.body.bounce.setTo(0.1, 0.1);
     
-    //animations
-    this.sprite.animations.add('walk-up', [0], 10, true);
+    //animations4
+    this.sprite.animations.add('walk-up', [12,13,14,15], 7, true);
     this.sprite.animations.add('walk-down', [0,1,2,3], 7, true);
-    this.sprite.animations.add('walk-left', [0], 10, true);
-    this.sprite.animations.add('walk-right', [0], 10, true);
+    this.sprite.animations.add('walk-left', [4,5,6,7], 7, true);
+    this.sprite.animations.add('walk-right', [8,9,11,10], 7, true);
     
     this.direction = Config.DOWN;
 }
