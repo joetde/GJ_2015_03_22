@@ -16,15 +16,19 @@ var Config = {
     SHOOT : Phaser.Keyboard.S,
     FIRE_RATE : 100,
     FIRE_SPEED : 500,
-    FIRE_INIT_OFFSET : 3
+    FIRE_INIT_OFFSET : 3,
+	ZOMBIE_VIEW_RADIUS : 200,
+	MIN_MUTATE_TIME : 3000,
+	MAX_MUTATE_TIME : 40000,
+	MIN_MOVE_TIME : 500,
+	MAX_MOVE_TIME : 2000
 };
 
 var Globals = {
     backgroundImg : null,
     backgroundMusic : null,
     target : null,
-    leftTop : null,
-	zombieView : 200
+    leftTop : null
 };
 
 // game variables
@@ -75,15 +79,21 @@ var world = {
 		// Humans 
 		for(i = 0; i < 50; i++)
 		{
+			valid = false
+			while (valid) {
+				x = game.world.randomX;
+				y = game.world.randomY;
+				valid = (x > 100 && y > 100)
+			}
 			var human = this.humans.create(game.world.randomX, game.world.randomY, 'human');
 			human.name = 'human' + i;
 			human.body.collideWorldBounds = true;
 			human.body.width = 30;
 			human.body.height = 50;
 			human.body.bounce.setTo(0.1, 0.1);
-			human.body.velocity.setTo(5 + Math.random() * 40, 5 + Math.random() * 40);
-			human.lifespan = this.rng.between(2000, 10000);
+			human.lifespan = this.rng.between(Config.MIN_MUTATE_TIME, Config.MAX_MUTATE_TIME);
 			human.events.onKilled.add(this.humanMutate, this);
+			human.lastmove = 0;
 		}
     },
 
@@ -95,8 +105,12 @@ var world = {
 		game.physics.arcade.collide(this.humans, this.humans);
 		
 		this.player.update();
+		
+		// zombies
 		this.zombies.forEach(this.gotToTarget, this, true);
-        this.humans.update();
+		
+		// humans
+		this.humans.forEach(this.randomMove, this, true);
     },
 	
 	humanMutate : function (human) {
@@ -106,19 +120,22 @@ var world = {
 		zombie.body.width = 30;
 		zombie.body.height = 50;
 		zombie.body.bounce.setTo(0.1, 0.1);
-		zombie.body.velocity.setTo(5 + Math.random() * 40, 5 + Math.random() * 40);
+		zombie.lastmove = 0;
 	},
 	
 	gotToTarget: function(zombie) {
-		if (this.targetInRange(zombie)) {
+		if (this.game.physics.arcade.distanceBetween(zombie, Globals.target) < Config.ZOMBIE_VIEW_RADIUS) {
 			game.physics.arcade.moveToObject(zombie, Globals.target, 50);
+		} else {
+			this.randomMove(zombie);
 		}
 	},
 	
-	targetInRange: function(zombie) {
-		dx = zombie.x - Globals.target.x;
-		dy = zombie.y - Globals.target.y;
-		return Math.sqrt(dx*dx + dy*dy) < Globals.zombieView;
+	randomMove: function(entity) {
+		if ((game.time.now - entity.lastmove) > this.rng.between(Config.MIN_MOVE_TIME, Config.MAX_MOVE_TIME)) {
+			entity.body.velocity.setTo(5 + this.rng.between(-1, 1) * 40, 5 + this.rng.between(-1, 1) * 40);
+			entity.lastmove = game.time.now;
+		}
 	},
     
     shoot: function(position, direction) {
