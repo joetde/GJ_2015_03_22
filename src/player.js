@@ -26,7 +26,6 @@ Player.prototype.damage = function () {
 	if (this.invulnerabilityEndTime < game.time.now) {
 		this.life = this.life - 1;
 		this.invulnerabilityEndTime = game.time.now + Config.INVULNERABILITY_TIME;
-		console.log('ouch' + this.life);
 	}
 }
 
