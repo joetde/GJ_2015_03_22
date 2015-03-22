@@ -5,6 +5,9 @@ var Player = function(world) {
     this.sprite = game.add.sprite(0, 0, 'medic_simple');
     game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	this.sprite.body.bounce.setTo(0.1, 0.1);
+	this.sprite.body.collideWorldBounds = true;
+	this.life = Config.PLAYER_LIFE;
+	this.invulnerabilityEndTime = 0;
     
     //animations4
     this.sprite.animations.add('walk-up', [12,13,15,14], 7, true);
@@ -17,6 +20,14 @@ var Player = function(world) {
     this.sprite.animations.add('idle-right', [9], 0, false);
     
     this.direction = Config.DOWN;
+}
+
+Player.prototype.damage = function () {
+	if (this.invulnerabilityEndTime < game.time.now) {
+		this.life = this.life - 1;
+		this.invulnerabilityEndTime = game.time.now + Config.INVULNERABILITY_TIME;
+		console.log('ouch' + this.life);
+	}
 }
 
 Player.prototype.update =  function () {
