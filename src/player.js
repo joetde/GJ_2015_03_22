@@ -15,6 +15,7 @@ var Player = function(world) {
 Player.prototype.update =  function () {
     this.sprite.body.velocity.x = 0;
     this.sprite.body.velocity.y = 0;
+    var direction = Config.DOWN;
     for (direction = 0; direction < 4; direction++) {
         if (game.input.keyboard.isDown(Config.KEYS[direction])) {
             //compute velocity
@@ -28,15 +29,23 @@ Player.prototype.update =  function () {
     if(this.sprite.body.velocity.y !== 0) {
         if(this.sprite.body.velocity.y > 0){
             this.sprite.animations.play('walk-down');
+            direction = Config.DOWN;
         } else {
             this.sprite.animations.play('walk-up');
+            direction = Config.UP;
         }
     }
     else if(this.sprite.body.velocity.x !== 0) {
         if(this.sprite.body.velocity.x > 0){
             this.sprite.animations.play('walk-right');
+            direction = Config.RIGHT;
         } else {
             this.sprite.animations.play('walk-left');
+            direction = Config.LEFT;
         }
+    }
+    
+    if (game.input.keyboard.isDown(Config.SHOOT)) {
+        this.world.shoot(this.sprite.anchor, direction)
     }
 }

@@ -3,7 +3,7 @@
 /*global $, Phaser*/
 
 var Config = {
-    KEYS : [Phaser.Keyboard.Z, Phaser.Keyboard.S, Phaser.Keyboard.Q, Phaser.Keyboard.D],
+    KEYS : [Phaser.Keyboard.UP, Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT],
     COORMAP : [[0, -1],
                [0, 1],
                [-1, 0],
@@ -12,6 +12,7 @@ var Config = {
     DOWN : 1,
     LEFT : 2,
     RIGHT : 3,
+    SHOOT : Phaser.Keyboard.S,
     SPEED : 500
 };
 
@@ -30,6 +31,7 @@ var world = {
     zombies: null,
     humans: null,
     player: null,
+    balls: null,
     
     preload: function () {
         // sounds
@@ -37,6 +39,7 @@ var world = {
 
         // images
         game.load.image('zombie', 'res/img/zombie_simple.png');
+        game.load.image('ball', 'res/img/brocoli.png');
         game.load.spritesheet('medic_simple', 'res/img/medic_simple.png', 48, 83);
     },
 
@@ -53,6 +56,9 @@ var world = {
         this.player = new Player(world);
 		Globals.target = this.player;
 
+        this.balls = game.add.group();
+        this.balls.enableBody = true;
+        
         // sound
         Globals.backgroundMusic = game.add.audio('background_music');
         Globals.backgroundMusic.play(null, 0, 1, true);
@@ -89,7 +95,10 @@ var world = {
 		dx = zombie.x - Globals.target.sprite.x;
 		dy = zombie.y - Globals.target.sprite.y;
 		return Math.sqrt(dx*dx + dy*dy) < Globals.zombieView;
-	}
+	},
+    
+    shoot: function(position, direction) {
+    }
 }
 
 game.state.add('world', world);
