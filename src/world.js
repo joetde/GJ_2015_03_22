@@ -45,6 +45,7 @@ var world = {
 	npcs:null,
     nextFire:0,
 	mobSpeed:40,
+	mobsNb:35,
     
     preload: function () {
         // sounds
@@ -80,7 +81,7 @@ var world = {
         Globals.backgroundMusic.play(null, 0, 1, true);
 
 		// Humans 
-		for(i = 0; i < 35; i++)
+		for(i = 0; i < this.mobsNb; i++)
 		{
 			valid = false
 			while (!valid) {
@@ -109,12 +110,12 @@ var world = {
 		game.physics.arcade.collide(this.zombies, this.zombies);
 		game.physics.arcade.collide(this.humans, this.humans);
 		game.physics.arcade.collide(this.zombies, this.balls, function(zombie, ball){
-            ball.kill()
-            zombie.kill()
+            ball.kill();
+            zombie.kill();
         });
 		game.physics.arcade.collide(this.humans, this.balls, function(human, ball){
-            ball.kill()
-            human.kill()
+            ball.kill();
+            human.kill();
         });
 		
 		this.player.update();
