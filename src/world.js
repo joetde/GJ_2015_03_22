@@ -50,9 +50,9 @@ var world = {
         game.load.audio('background_music', 'res/snd/temp.mp3');
 
         // images
-        game.load.image('zombie', 'res/img/zombie_simple.png');
+        game.load.spritesheet('zombie', 'res/img/zombie_sprite.png', 48, 63);
         game.load.image('ball', 'res/img/brocoli.png');
-		game.load.image('human', 'res/img/human_simple.png');
+		game.load.spritesheet('human', 'res/img/human_sprite.png', 55, 65);
         game.load.spritesheet('medic_simple', 'res/img/medic_sprite.png', 35, 62);
     },
 
@@ -96,6 +96,12 @@ var world = {
 			human.lifespan = this.rng.between(Config.MIN_MUTATE_TIME, Config.MAX_MUTATE_TIME);
 			human.events.onKilled.add(this.humanMutate, this);
 			human.lastmove = 0;
+            
+            //animations
+            human.animations.add('walk-up', [9,10,9,11], 7, true);
+            human.animations.add('walk-down', [0,1,0,2], 7, true);
+            human.animations.add('walk-left', [3,4,3,5], 7, true);
+            human.animations.add('walk-right', [6,7,6,8], 7, true);
 		}
     },
 
@@ -120,9 +126,11 @@ var world = {
 		
 		// zombies
 		this.zombies.forEach(this.gotToTarget, this, true);
+		this.zombies.forEach(drawEntity, this, true);
 		
 		// humans
 		this.humans.forEach(this.randomMove, this, true);
+		this.humans.forEach(drawEntity, this, true);
     },
 	
 	humanMutate : function (human) {
@@ -133,6 +141,12 @@ var world = {
 		zombie.body.height = 50;
 		zombie.body.bounce.setTo(0.1, 0.1);
 		zombie.lastmove = 0;
+        
+        //animations
+        zombie.animations.add('walk-up', [9,10,9,11], 7, true);
+        zombie.animations.add('walk-down', [0,1,0,2], 7, true);
+        zombie.animations.add('walk-left', [3,4,3,5], 7, true);
+        zombie.animations.add('walk-right', [6,7,6,8], 7, true);
 	},
 	
 	gotToTarget: function(zombie) {
@@ -177,6 +191,22 @@ var world = {
                     ball.body.velocity.y = 0;
                 }
             }
+        }
+    }
+}
+
+function drawEntity(entity) {
+    if(Math.abs(entity.body.velocity.x) > Math.abs(entity.body.velocity.y)) {
+        if(entity.body.velocity.x > 0){
+            entity.animations.play('walk-right');
+        } else {
+            entity.animations.play('walk-left');
+        }
+    } else {
+        if(entity.body.velocity.y > 0){
+            entity.animations.play('walk-down');
+        } else {
+            entity.animations.play('walk-up');
         }
     }
 }
