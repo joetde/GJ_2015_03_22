@@ -36,8 +36,8 @@ var world = {
         game.load.audio('background_music', 'res/snd/temp.mp3');
 
         // images
-        game.load.image('temp', 'res/img/temp.png');
-		game.load.image('medic_simple', 'res/img/medic_simple.png');
+        game.load.image('zombie', 'res/img/zombie_simple.png');
+        game.load.spritesheet('medic_simple', 'res/img/medic_simple.png', 48, 83);
     },
 
     create: function () {
@@ -60,11 +60,11 @@ var world = {
 		// Zombies
 		for (var i = 0; i < 50; i++)
 		{
-			var zombie = this.zombies.create(game.world.randomX, game.world.randomY, 'temp');
+			var zombie = this.zombies.create(game.world.randomX, game.world.randomY, 'zombie');
 			zombie.name = 'zombie' + i;
 			zombie.body.collideWorldBounds = true;
-			zombie.body.width = 30;
-			zombie.body.height = 30;
+			zombie.body.width = 40;
+			zombie.body.height = 50;
 			zombie.body.bounce.setTo(0.8, 0.8);
 			zombie.body.velocity.setTo(10 + Math.random() * 40, 10 + Math.random() * 40);
 		}
