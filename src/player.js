@@ -1,6 +1,6 @@
 var Player = function(world) {
     this.world = world;
-    
+
     //init
     this.sprite = game.add.sprite(0, 0, 'medic_simple');
     game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
