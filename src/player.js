@@ -10,12 +10,13 @@ var Player = function(world) {
     this.sprite.animations.add('walk-down', [0], 10, true);
     this.sprite.animations.add('walk-left', [0], 10, true);
     this.sprite.animations.add('walk-right', [0], 10, true);
+    
+    this.direction = Config.DOWN;
 }
 
 Player.prototype.update =  function () {
     this.sprite.body.velocity.x = 0;
     this.sprite.body.velocity.y = 0;
-    var direction = Config.DOWN;
     for (direction = 0; direction < 4; direction++) {
         if (game.input.keyboard.isDown(Config.KEYS[direction])) {
             //compute velocity
@@ -29,23 +30,23 @@ Player.prototype.update =  function () {
     if(this.sprite.body.velocity.y !== 0) {
         if(this.sprite.body.velocity.y > 0){
             this.sprite.animations.play('walk-down');
-            direction = Config.DOWN;
+            this.direction = Config.DOWN;
         } else {
             this.sprite.animations.play('walk-up');
-            direction = Config.UP;
+            this.direction = Config.UP;
         }
     }
     else if(this.sprite.body.velocity.x !== 0) {
         if(this.sprite.body.velocity.x > 0){
             this.sprite.animations.play('walk-right');
-            direction = Config.RIGHT;
+            this.direction = Config.RIGHT;
         } else {
             this.sprite.animations.play('walk-left');
-            direction = Config.LEFT;
+            this.direction = Config.LEFT;
         }
     }
     
     if (game.input.keyboard.isDown(Config.SHOOT)) {
-        this.world.shoot(this.sprite.anchor, direction)
+        this.world.shoot(new Phaser.Point(this.sprite.x, this.sprite.y), this.direction)
     }
 }
