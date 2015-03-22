@@ -6,11 +6,15 @@ var Player = function(world) {
     game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	this.sprite.body.bounce.setTo(0.1, 0.1);
     
-    //animations
-    this.sprite.animations.add('walk-up', [0], 10, true);
+    //animations4
+    this.sprite.animations.add('walk-up', [12,13,15,14], 7, true);
     this.sprite.animations.add('walk-down', [0,1,2,3], 7, true);
-    this.sprite.animations.add('walk-left', [0], 10, true);
-    this.sprite.animations.add('walk-right', [0], 10, true);
+    this.sprite.animations.add('walk-left', [4,5,6,7], 7, true);
+    this.sprite.animations.add('walk-right', [8,9,11,10], 7, true);
+    this.sprite.animations.add('idle-up', [12], 0, false);
+    this.sprite.animations.add('idle-down', [0], 0, false);
+    this.sprite.animations.add('idle-left', [4], 0, false);
+    this.sprite.animations.add('idle-right', [9], 0, false);
     
     this.direction = Config.DOWN;
 }
@@ -45,6 +49,18 @@ Player.prototype.update =  function () {
             this.sprite.animations.play('walk-left');
             this.direction = Config.LEFT;
         }
+    } else {
+        //idle
+        if(this.direction == Config.UP){  
+            this.sprite.animations.play('idle-up');
+        } else if(this.direction == Config.DOWN){
+            this.sprite.animations.play('idle-down');
+        } else if(this.direction == Config.LEFT){
+            this.sprite.animations.play('idle-left');
+        } else if(this.direction == Config.RIGHT){
+            this.sprite.animations.play('idle-right');
+        }
+
     }
     
     if (game.input.keyboard.isDown(Config.SHOOT)) {

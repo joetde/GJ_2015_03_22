@@ -14,7 +14,7 @@ var Config = {
     RIGHT : 3,
     SPEED : 200,
     SHOOT : Phaser.Keyboard.S,
-    FIRE_RATE : 100,
+    FIRE_RATE : 300,
     FIRE_SPEED : 500,
     FIRE_INIT_OFFSET : 3,
 	ZOMBIE_VIEW_RADIUS : 200,
@@ -51,7 +51,7 @@ var world = {
         game.load.image('zombie', 'res/img/zombie_simple.png');
         game.load.image('ball', 'res/img/brocoli.png');
 		game.load.image('human', 'res/img/human_simple.png');
-        game.load.spritesheet('medic_simple', 'res/img/medic_sprite.png', 33, 61);
+        game.load.spritesheet('medic_simple', 'res/img/medic_sprite.png', 35, 62);
     },
 
     create: function () {
@@ -103,6 +103,14 @@ var world = {
 		game.physics.arcade.collide(this.zombies, this.humans);
 		game.physics.arcade.collide(this.zombies, this.zombies);
 		game.physics.arcade.collide(this.humans, this.humans);
+		game.physics.arcade.collide(this.zombies, this.balls, function(zombie, ball){
+            ball.kill()
+            zombie.kill()
+        });
+		game.physics.arcade.collide(this.humans, this.balls, function(human, ball){
+            ball.kill()
+            human.kill()
+        });
 		
 		this.player.update();
 		
