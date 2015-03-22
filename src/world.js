@@ -12,7 +12,7 @@ var Config = {
     DOWN : 1,
     LEFT : 2,
     RIGHT : 3,
-    SPEED : 500
+    SPEED : 200
 };
 
 var Globals = {
@@ -30,7 +30,7 @@ var world = {
     zombies: null,
     humans: null,
     player: null,
-	npcs:null,
+	rng: new Phaser.RandomDataGenerator([(new Date()).toString()]),
     
     preload: function () {
         // sounds
@@ -53,7 +53,7 @@ var world = {
         this.humans.enableBody = true;
 
         this.player = new Player(world);
-		Globals.target = this.player;
+		Globals.target = this.player.sprite;
 
         // sound
         Globals.backgroundMusic = game.add.audio('background_music');
@@ -67,8 +67,10 @@ var world = {
 			human.body.collideWorldBounds = true;
 			human.body.width = 30;
 			human.body.height = 50;
-			human.body.bounce.setTo(0.8, 0.8);
-			human.body.velocity.setTo(10 + Math.random() * 40, 10 + Math.random() * 40);
+			human.body.bounce.setTo(0.1, 0.1);
+			human.body.velocity.setTo(5 + Math.random() * 40, 5 + Math.random() * 40);
+			human.lifespan = this.rng.between(2000, 10000);
+			human.events.onKilled.add(this.humanMutate, this);
 		}
     },
 
@@ -84,15 +86,25 @@ var world = {
         this.humans.update();
     },
 	
+	humanMutate : function (human) {
+		var zombie = this.zombies.create(human.x, human.y, 'zombie');
+		zombie.name = 'zombie' + i;
+		zombie.body.collideWorldBounds = true;
+		zombie.body.width = 30;
+		zombie.body.height = 50;
+		zombie.body.bounce.setTo(0.1, 0.1);
+		zombie.body.velocity.setTo(5 + Math.random() * 40, 5 + Math.random() * 40);
+	},
+	
 	gotToTarget: function(zombie) {
 		if (this.targetInRange(zombie)) {
-			game.physics.arcade.moveToObject(zombie, Globals.target.sprite, 100);
+			game.physics.arcade.moveToObject(zombie, Globals.target, 50);
 		}
 	},
 	
 	targetInRange: function(zombie) {
-		dx = zombie.x - Globals.target.sprite.x;
-		dy = zombie.y - Globals.target.sprite.y;
+		dx = zombie.x - Globals.target.x;
+		dy = zombie.y - Globals.target.y;
 		return Math.sqrt(dx*dx + dy*dy) < Globals.zombieView;
 	}
 }

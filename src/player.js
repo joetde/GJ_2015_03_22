@@ -4,6 +4,7 @@ var Player = function(world) {
     //init
     this.sprite = game.add.sprite(0, 0, 'medic_simple');
     game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+	this.sprite.body.bounce.setTo(0.1, 0.1);
     
     //animations
     this.sprite.animations.add('walk-up', [0], 10, true);
