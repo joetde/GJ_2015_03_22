@@ -32,6 +32,7 @@ var world = {
     humans: null,
     player: null,
     balls: null,
+	npcs:null,
     
     preload: function () {
         // sounds
@@ -40,7 +41,8 @@ var world = {
         // images
         game.load.image('zombie', 'res/img/zombie_simple.png');
         game.load.image('ball', 'res/img/brocoli.png');
-        game.load.spritesheet('medic_simple', 'res/img/medic_simple.png', 48, 83);
+		game.load.image('human', 'res/img/human_simple.png');
+        game.load.spritesheet('medic_simple', 'res/img/medic_simple.png', 33, 58);
     },
 
     create: function () {
@@ -63,22 +65,25 @@ var world = {
         Globals.backgroundMusic = game.add.audio('background_music');
         Globals.backgroundMusic.play(null, 0, 1, true);
 
-		// Zombies
-		for (var i = 0; i < 50; i++)
+		// Humans 
+		for(i = 0; i < 50; i++)
 		{
-			var zombie = this.zombies.create(game.world.randomX, game.world.randomY, 'zombie');
-			zombie.name = 'zombie' + i;
-			zombie.body.collideWorldBounds = true;
-			zombie.body.width = 40;
-			zombie.body.height = 50;
-			zombie.body.bounce.setTo(0.8, 0.8);
-			zombie.body.velocity.setTo(10 + Math.random() * 40, 10 + Math.random() * 40);
+			var human = this.humans.create(game.world.randomX, game.world.randomY, 'human');
+			human.name = 'human' + i;
+			human.body.collideWorldBounds = true;
+			human.body.width = 30;
+			human.body.height = 50;
+			human.body.bounce.setTo(0.8, 0.8);
+			human.body.velocity.setTo(10 + Math.random() * 40, 10 + Math.random() * 40);
 		}
     },
 
     update: function () {
-		game.physics.arcade.collide(this.player, this.zombies);
+		game.physics.arcade.collide(this.player.sprite, this.zombies);
+		game.physics.arcade.collide(this.player.sprite, this.humans);
+		game.physics.arcade.collide(this.zombies, this.humans);
 		game.physics.arcade.collide(this.zombies, this.zombies);
+		game.physics.arcade.collide(this.humans, this.humans);
 		
 		this.player.update();
 		this.zombies.forEach(this.gotToTarget, this, true);
