@@ -22,7 +22,7 @@ var Config = {
 	MAX_MUTATE_TIME : 40000,
 	MIN_MOVE_TIME : 500,
 	MAX_MOVE_TIME : 2000,
-	PLAYER_LIFE : 10,
+	PLAYER_LIFE : 5,
 	INVULNERABILITY_TIME : 500
 };
 
@@ -44,6 +44,7 @@ var world = {
     balls: null,
 	npcs:null,
     nextFire:0,
+	mobSpeed:40,
     
     preload: function () {
         // sounds
@@ -123,6 +124,18 @@ var world = {
 		
 		// humans
 		this.humans.forEach(this.randomMove, this, true);
+		
+		if (this.player.life == 0) {
+			this.player.sprite.kill();
+			Globals.target = null;
+			this.mobSpeed = this.mobSpeed * 5;
+			var style = { font: "65px Arial", fill: "#ffffff", align: "center" };
+			var text = game.add.text(game.world.centerX, game.world.centerY, "this.player undefined...\nTHE GAMEOVER\nF5 to reload", style);
+			text.anchor.set(0.5);
+			text.addColor('#ff0000', 24);
+			text.addColor('#ffffff', 20);
+			text.addColor('#ffff00', 36);
+		}		
     },
 	
 	humanMutate : function (human) {
@@ -136,7 +149,7 @@ var world = {
 	},
 	
 	gotToTarget: function(zombie) {
-		if (this.game.physics.arcade.distanceBetween(zombie, Globals.target) < Config.ZOMBIE_VIEW_RADIUS) {
+		if (Globals.target && this.game.physics.arcade.distanceBetween(zombie, Globals.target) < Config.ZOMBIE_VIEW_RADIUS) {
 			game.physics.arcade.moveToObject(zombie, Globals.target, 50);
 		} else {
 			this.randomMove(zombie);
@@ -145,7 +158,7 @@ var world = {
 	
 	randomMove: function(entity) {
 		if ((game.time.now - entity.lastmove) > this.rng.between(Config.MIN_MOVE_TIME, Config.MAX_MOVE_TIME)) {
-			entity.body.velocity.setTo(this.rng.between(-1, 1) * 40, this.rng.between(-1, 1) * 40);
+			entity.body.velocity.setTo(this.rng.between(-1, 1) * this.mobSpeed, this.rng.between(-1, 1) * this.mobSpeed);
 			entity.lastmove = game.time.now;
 		}
 	},
