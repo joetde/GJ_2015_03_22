@@ -21,22 +21,22 @@ Player.prototype.update =  function () {
             Config.COORMAP[direction][0] ? this.sprite.body.velocity.x = Config.COORMAP[direction][0] * Config.SPEED : 0;
             Config.COORMAP[direction][1] ? this.sprite.body.velocity.y = Config.COORMAP[direction][1] * Config.SPEED : 0;
         }
-        
-        //compute tile
-        //up and down sprites get the priority on left and right
-        if(this.sprite.body.velocity.y !== 0) {
-            if(this.sprite.body.velocity.y > 0){
-                this.sprite.animations.play('walk-down');
-            } else {
-                this.sprite.animations.play('walk-up');
-            }
+    }
+    
+    //compute tile
+    //up and down sprites get the priority on left and right
+    if(this.sprite.body.velocity.y !== 0) {
+        if(this.sprite.body.velocity.y > 0){
+            this.sprite.animations.play('walk-down');
+        } else {
+            this.sprite.animations.play('walk-up');
         }
-        else if(this.sprite.body.velocity.x !== 0) {
-            if(this.sprite.body.velocity.x > 0){
-                this.sprite.animations.play('walk-right');
-            } else {
-                this.sprite.animations.play('walk-left');
-            }
+    }
+    else if(this.sprite.body.velocity.x !== 0) {
+        if(this.sprite.body.velocity.x > 0){
+            this.sprite.animations.play('walk-right');
+        } else {
+            this.sprite.animations.play('walk-left');
         }
     }
 }
