@@ -56,10 +56,14 @@ var world = {
         game.load.image('ball', 'res/img/brocoli.png');
 		game.load.spritesheet('human', 'res/img/human_sprite.png', 55, 65);
         game.load.spritesheet('medic_simple', 'res/img/medic_sprite.png', 35, 62);
+		game.load.image('background', 'res/img/background.png');
     },
 
     create: function () {
 		game.physics.startSystem(Phaser.Physics.ARCADE);
+	
+		// background
+		Globals.backgroundImage = game.add.sprite(0,0,'background');
 	
         //Entities
         this.zombies = game.add.group();
