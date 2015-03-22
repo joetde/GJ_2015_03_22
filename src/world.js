@@ -14,7 +14,7 @@ var Config = {
     RIGHT : 3,
     SPEED : 200,
     SHOOT : Phaser.Keyboard.S,
-    FIRE_RATE : 100,
+    FIRE_RATE : 300,
     FIRE_SPEED : 500,
     FIRE_INIT_OFFSET : 3
 };
@@ -93,6 +93,14 @@ var world = {
 		game.physics.arcade.collide(this.zombies, this.humans);
 		game.physics.arcade.collide(this.zombies, this.zombies);
 		game.physics.arcade.collide(this.humans, this.humans);
+		game.physics.arcade.collide(this.zombies, this.balls, function(zombie, ball){
+            ball.kill()
+            zombie.kill()
+        });
+		game.physics.arcade.collide(this.humans, this.balls, function(human, ball){
+            ball.kill()
+            human.kill()
+        });
 		
 		this.player.update();
 		this.zombies.forEach(this.gotToTarget, this, true);
