@@ -35,7 +35,7 @@ var world = {
         game.load.audio('background_music', 'res/snd/temp.mp3');
 
         // images
-        game.load.image('temp', 'res/img/temp.png');
+        game.load.spritesheet('medic_simple', 'res/img/medic_simple.png', 87, 87);
     },
 
     create: function () {
