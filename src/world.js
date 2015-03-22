@@ -40,8 +40,11 @@ var world = {
     },
 
     create: function () {
+		game.physics.startSystem(Phaser.Physics.ARCADE);
+	
         //Entities
         this.zombies = game.add.group();
+		this.zombies.classType = Zombie;
         this.zombies.enableBody = true;
         
         this.humans = game.add.group();
@@ -58,6 +61,13 @@ var world = {
         Globals.backgroundMusic.play(null, 0, 1, true);
 
         game.physics.enable(Globals.player, Phaser.Physics.ARCADE);
+		
+		
+		// Zombies
+		for (var i = 0; i < 50; i++)
+		{
+			var ball = zombies.create(game.world.randomX, game.world.randomY, 'temp');
+		}
     },
 
     update: function () {
